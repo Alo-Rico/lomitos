@@ -1,45 +1,38 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Menú de Lomitos</title>
-  <link rel="stylesheet" href="style-lomitos.css" />
-</head>
-<body>
-  <header>
-    <img src="logo.png" alt="Logo" class="logo" />
-    <h1>Menú Alorico Lomitos</h1>
-    <img src="Repartidor.png" alt="Repartidor" class="icono" />
-  </header>
-
-  <div class="menu-container" id="menu-container"></div>
-
-  <!-- Popup de cantidad -->
-  <div id="popup" class="popup">
-    <div class="popup-content">
-      <h2 id="popup-title"></h2>
-      <label for="cantidad">Cantidad:</label>
-      <input type="number" id="cantidad" value="1" min="1" />
-      <div class="popup-buttons">
-        <button id="confirmar-btn">Agregar</button>
-        <button onclick="cerrarPopup()">Cancelar</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Fondo oscuro -->
-  <div id="overlay" class="overlay" onclick="cerrarPopup()"></div>
-
-  <!-- Panel de pedido -->
-  <div id="pedido-flotante">
-    <h3>Mi Pedido</h3>
-    <ul id="lista-pedido"></ul>
-    <p id="total-pedido"></p>
-    <button class="borrar" onclick="borrarPedido()">Borrar todo</button>
-    <button class="whatsapp" onclick="enviarPedido()">Enviar pedido</button>
-  </div>
-
-  <script src="script-lomitos.js"></script>
-</body>
-</html>
+{
+  "Super pancho": {
+    "categoria": "lomito",
+    "precio": 10000,
+    "ingredientes": "",
+    "imagen": "https://raw.githubusercontent.com/1967-ROB/lomitos/main/img-lomitos/super-pancho.jpg"
+  },
+  "Super pancho especial": {
+    "categoria": "lomito",
+    "precio": 15000,
+    "ingredientes": "Queso fundido con panceta",
+    "imagen": "https://raw.githubusercontent.com/1967-ROB/lomitos/main/img-lomitos/super-pancho-especial.jpg"
+  },
+  "Sándwich de lomito": {
+    "categoria": "lomito",
+    "precio": 28000,
+    "ingredientes": "Pan, carne, jamón, queso, huevo, panceta, repollo, tomate",
+    "imagen": "https://raw.githubusercontent.com/1967-ROB/lomitos/main/img-lomitos/sandwich-lomito.jpg"
+  },
+  "Lomito árabe mixto": {
+    "categoria": "lomito",
+    "precio": 28000,
+    "ingredientes": "Pan árabe, carne picada, salsa de ajo, repollo, tomate",
+    "imagen": "https://raw.githubusercontent.com/1967-ROB/lomitos/main/img-lomitos/lomito-arabe-mixto.jpg"
+  },
+  "Lomito árabe de pollo": {
+    "categoria": "lomito",
+    "precio": 27000,
+    "ingredientes": "Pan árabe, pollo picado, salsa de ajo, repollo, tomate",
+    "imagen": "https://raw.githubusercontent.com/1967-ROB/lomitos/main/img-lomitos/lomito-arabe-pollo.jpg"
+  },
+  "Lomito árabe de carne": {
+    "categoria": "lomito",
+    "precio": 30000,
+    "ingredientes": "Pan árabe, carne lomito picada, salsa de ajo, repollo, tomate",
+    "imagen": "https://raw.githubusercontent.com/1967-ROB/lomitos/main/img-lomitos/lomito-arabe-carne.jpg"
+  }
+}
