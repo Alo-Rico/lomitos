@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Menú Alorico Lomitos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fefaf0;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      margin-top: 20px;
+    }
+    header img.logo {
+      width: 120px;
+      height: auto;
+    }
+    header h1 {
+      font-size: 28px;
+      color: #c24a00;
+      margin: 10px 0 5px;
+    }
+    header img.icono {
+      width: 60px;
+      height: auto;
+      margin-bottom: 10px;
+    }
+    .menu-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 20px;
+    }
+    .product {
+      width: 180px;
+      background: white;
+      margin: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .product:hover {
+      transform: scale(1.03);
+    }
+    .product img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 10px 10px 0 0;
+    }
+    .product h3 {
+      margin: 10px 0 5px;
+      font-size: 16px;
+    }
+    .product p {
+      margin: 0 0 10px;
+      color: #444;
+      font-weight: bold;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 400px;
+      text-align: center;
+    }
+    .modal-content input {
+      width: 60px;
+      font-size: 18px;
+      margin: 10px 0;
+      text-align: center;
+    }
+    .modal-buttons button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 14px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .confirmar { background-color: #c24a00; color: white; }
+    .cancelar { background-color: #ccc; color: black; }
+    #pedido-flotante {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #fff;
+      border-top: 2px solid #c24a00;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+      z-index: 1000;
+      padding: 10px;
+      text-align: left;
+    }
+    #pedido-flotante h3 {
+      margin: 5px 0;
+    }
+    #pedido-flotante ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+    #pedido-flotante button {
+      margin-top: 5px;
+      margin-right: 5px;
+      padding: 6px 12px;
+      font-size: 14px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .borrar { background-color: red; color: white; }
+    .whatsapp { background-color: green; color: white; }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo.png" alt="Logo Alo Rico" class="logo" />
+    <h1>Menú de Lomitos</h1>
+    <img src="Repartidor.png" alt="" class="icono" />
+  </header>
+
+  <div class="menu-container" id="menu"></div>
+
+  <!-- Modal de cantidad -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <h2 id="modal-titulo"></h2>
+      <label for="cantidad">Cantidad:</label>
+      <input type="number" id="cantidad" value="1" min="1">
+      <div class="modal-buttons">
+        <button id="btn-confirmar" class="confirmar">Agregar</button>
+        <button id="btn-cancelar" class="cancelar">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="pedido-flotante">
+    <h3>Mi Pedido</h3>
+    <ul id="lista-pedido"></ul>
+    <p id="total-pedido"></p>
+    <button class="borrar" id="btn-borrar">Borrar todo</button>
+    <button class="whatsapp" id="enviar-whatsapp">Enviar pedido</button>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const modal = document.getElementById('modal');
+      const modalTitulo = document.getElementById('modal-titulo');
+      const inputCantidad = document.getElementById('cantidad');
+      const btnConfirmar = document.getElementById('btn-confirmar');
+      const btnCancelar = document.getElementById('btn-cancelar');
+      const listaPedido = document.getElementById('lista-pedido');
+      const totalPedido = document.getElementById('total-pedido');
+      const btnBorrar = document.getElementById('btn-borrar');
+      const btnWhatsapp = document.getElementById('enviar-whatsapp');
+
+      let productosGlobal = {};
+      let pedido = [];
+
+      btnCancelar.onclick = () => {
+        modal.style.display = 'none';
+      };
+
+      btnConfirmar.onclick = () => {
+        const nombre = modalTitulo.textContent;
+        const cantidad = parseInt(inputCantidad.value);
+        const precio = productosGlobal[nombre].precio;
+        pedido.push({ nombre, cantidad, precio });
+        actualizarPedido();
+        modal.style.display = 'none';
+      };
+
+      btnBorrar.onclick = () => {
+        pedido = [];
+        actualizarPedido();
+      };
+
+      btnWhatsapp.onclick = () => {
+        if (pedido.length === 0) return alert('No hay nada en el pedido');
+        const mensaje = pedido.map(p => `- ${p.cantidad} x ${p.nombre}`).join('%0A');
+        const total = pedido.reduce((sum, p) => sum + (p.precio * p.cantidad), 0);
+        const texto = `Hola, estoy haciendo un pedido desde la web:%0A${mensaje}%0A%0ATotal: Gs. ${total.toLocaleString()}`;
+        window.open(`https://wa.me/+595986398701?text=${texto}`, '_blank');
+      };
+
+      function actualizarPedido() {
+        listaPedido.innerHTML = '';
+        let total = 0;
+        pedido.forEach(p => {
+          const li = document.createElement('li');
+          li.textContent = `${p.cantidad} x ${p.nombre} - Gs. ${(p.precio * p.cantidad).toLocaleString()}`;
+          listaPedido.appendChild(li);
+          total += p.precio * p.cantidad;
+        });
+        totalPedido.textContent = `Total: Gs. ${total.toLocaleString()}`;
+      }
+
+      try {
+        const res = await fetch("https://raw.githubusercontent.com/1967-ROB/precios-alorico-hamb-lomito/main/precios.json");
+        const productos = await res.json();
+        productosGlobal = productos;
+
+        const menu = document.getElementById('menu');
+        menu.innerHTML = '';
+
+        Object.entries(productos).forEach(([nombre, info]) => {
+          const card = document.createElement('div');
+          card.className = 'product';
+          card.innerHTML = `
+            <img src="${info.imagen}" alt="${nombre}">
+            <h3>${nombre}</h3>
+            <p>Gs. ${info.precio.toLocaleString()}</p>
+          `;
+          card.addEventListener('click', () => {
+            modalTitulo.textContent = nombre;
+            inputCantidad.value = 1;
+            modal.style.display = 'flex';
+          });
+          menu.appendChild(card);
+        });
+      } catch (error) {
+        document.getElementById('menu').innerHTML = "<p style='color:red;'>No se pudo cargar el menú</p>";
+        console.error(error);
+      }
+    });
+  </script>
+</body>
+</html>
