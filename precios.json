@@ -3,36 +3,36 @@
     "categoria": "lomito",
     "precio": 10000,
     "ingredientes": "",
-    "imagen": "super-pancho.jpg"
+    "imagen": "super-pancho.jpeg"
   },
   "Super pancho especial": {
     "categoria": "lomito",
     "precio": 15000,
     "ingredientes": "Queso fundido con panceta",
-    "imagen": "super-pancho-especial.jpg"
+    "imagen": "super-pancho-especial.jpeg"
   },
   "Sándwich de lomito": {
     "categoria": "lomito",
     "precio": 28000,
     "ingredientes": "Pan, carne, jamón, queso, huevo, panceta, repollo, tomate",
-    "imagen": "sandwich-lomito.jpg"
+    "imagen": "sandwich-lomito.jpeg"
   },
   "Lomito árabe mixto": {
     "categoria": "lomito",
     "precio": 28000,
     "ingredientes": "Pan árabe, carne picada, salsa de ajo, repollo, tomate",
-    "imagen": "lomito-arabe-mixto.jpg"
+    "imagen": "lomito-arabe-mixto.jpeg"
   },
   "Lomito árabe de pollo": {
     "categoria": "lomito",
     "precio": 27000,
     "ingredientes": "Pan árabe, pollo picado, salsa de ajo, repollo, tomate",
-    "imagen": "lomito-arabe-pollo.jpg"
+    "imagen": "lomito-arabe-pollo.jpeg"
   },
   "Lomito árabe de carne": {
     "categoria": "lomito",
     "precio": 30000,
     "ingredientes": "Pan árabe, carne lomito picada, salsa de ajo, repollo, tomate",
-    "imagen": "lomito-arabe-carne.jpg"
+    "imagen": "lomito-arabe-carne.jpeg"
   }
 }
