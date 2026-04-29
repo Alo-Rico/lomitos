@@ -134,7 +134,8 @@
     <img src="Repartidor.png" alt="" class="icono" />
   </header>
 
-  <div class="menu-container" id="menu"></div>
+<div class="menu-container" id="menu"></div>
+<div style="height: 120px; width: 100%;"></div>
 
   <!-- Modal de cantidad -->
   <div id="modal" class="modal">
@@ -195,7 +196,7 @@
         const mensaje = pedido.map(p => `- ${p.cantidad} x ${p.nombre}`).join('%0A');
         const total = pedido.reduce((sum, p) => sum + (p.precio * p.cantidad), 0);
         const texto = `Hola, estoy haciendo un pedido desde la web:%0A${mensaje}%0A%0ATotal: Gs. ${total.toLocaleString()}`;
-        window.open(`https://wa.me/+595986398701?text=${texto}`, '_blank');
+        window.open(`https://wa.me/+595971891251?text=${texto}`, '_blank');
       };
 
       function actualizarPedido() {
@@ -222,7 +223,7 @@
           const card = document.createElement('div');
           card.className = 'product';
           card.innerHTML = `
-            <img src="${info.imagen}" alt="${nombre}">
+         <img src="lomitos/${info.imagen}" alt="${nombre}">
             <h3>${nombre}</h3>
             <p>Gs. ${info.precio.toLocaleString()}</p>
           `;
