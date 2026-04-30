@@ -242,27 +242,37 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const menu = document.getElementById('menu');
 
-    Object.entries(productos).forEach(([nombre, info]) => {
-      const card = document.createElement('div');
-      card.className = 'product';
+  Object.entries(productos).forEach(([nombre, info]) => {
+  const card = document.createElement('div');
+  card.className = 'product';
 
-      // 🔥 SOLUCIÓN DEFINITIVA PARA IMÁGENES
-      const imgURL = "imagen/" + encodeURIComponent(info.imagen);
+  // 🔥 FUNCIÓN
+  function limpiarNombre(nombre) {
+    return nombre
+      .toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(".jpeg", ".jpg");
+  }
 
-      card.innerHTML = `
-        <img src="${imgURL}" alt="${nombre}">
-        <h3>${nombre}</h3>
-        <p>Gs. ${info.precio.toLocaleString()}</p>
-      `;
+  // 🔥 ESTO TE FALTABA
+  const nombreLimpio = limpiarNombre(info.imagen);
+  const imgURL = "imagen/" + nombreLimpio;
 
-      card.onclick = () => {
-        modalTitulo.textContent = nombre;
-        inputCantidad.value = 1;
-        modal.style.display = 'flex';
-      };
+  card.innerHTML = `
+    <img src="${imgURL}" alt="${nombre}">
+    <h3>${nombre}</h3>
+    <p>Gs. ${info.precio.toLocaleString()}</p>
+  `;
 
-      menu.appendChild(card);
-    });
+  card.onclick = () => {
+    modalTitulo.textContent = nombre;
+    inputCantidad.value = 1;
+    modal.style.display = 'flex';
+  };
+
+  menu.appendChild(card);
+});
 
   } catch (error) {
     document.getElementById('menu').innerHTML = "<p style='color:red;'>No se pudo cargar el menú</p>";
