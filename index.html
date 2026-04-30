@@ -6,7 +6,7 @@
 <title>Menú Alo Rico - Lomitos</title>
 
 <style>
-body { font-family: Arial; background:#fefaf0; margin:0; text-align:center; }
+body { font-family: Arial, sans-serif; background:#fefaf0; margin:0; text-align:center; }
 
 header img.logo { width:120px; margin-top:20px; }
 header h1 { color:#c24a00; }
@@ -27,7 +27,9 @@ header img.icono { width:60px; }
   border-radius:10px;
   box-shadow:0 4px 8px rgba(0,0,0,0.1);
   cursor:pointer;
+  transition:0.2s;
 }
+.product:hover { transform:scale(1.03); }
 
 .product img {
   width:100%;
@@ -36,6 +38,9 @@ header img.icono { width:60px; }
   border-radius:10px 10px 0 0;
 }
 
+.product h3 { font-size:16px; margin:10px 0 5px; }
+.product p { font-weight:bold; }
+
 .btn-grid {
   position:fixed;
   right:15px;
@@ -43,20 +48,23 @@ header img.icono { width:60px; }
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:10px;
+  z-index:9998;
 }
 
 .btn-flotante {
-  padding:12px;
+  padding:12px 18px;
   border:none;
   border-radius:50px;
   font-weight:bold;
   color:white;
   cursor:pointer;
+  width:140px;
+  box-shadow:0 4px 6px rgba(0,0,0,0.2);
 }
 
 #btnPizza { background:#ffc107; color:black; }
 #btnHamburguesas { background:#28a745; }
-#btnLomitos { background:#ff5722; }
+#btnBebidas { background:#17a2b8; }
 #btnCarrito { background:#007bff; }
 
 #pedido-flotante {
@@ -64,13 +72,13 @@ header img.icono { width:60px; }
   top:50%;
   left:50%;
   transform:translate(-50%,-50%) scale(0);
-  width:350px;
+  width:380px;
   background:white;
   padding:15px;
   border-radius:10px;
   box-shadow:0 0 15px rgba(0,0,0,0.3);
+  text-align:left;
 }
-
 #pedido-flotante.activo {
   transform:translate(-50%,-50%) scale(1);
 }
@@ -108,8 +116,10 @@ header img.icono { width:60px; }
 <h3>Mi Pedido</h3>
 <ul id="lista-pedido"></ul>
 <p id="total-pedido"></p>
+<div style="display:flex;gap:5px;justify-content:center;">
 <button onclick="borrarPedido()">Borrar</button>
 <button onclick="enviarPedido()">Enviar</button>
+</div>
 </div>
 
 <!-- POPUP -->
@@ -123,27 +133,36 @@ header img.icono { width:60px; }
   </div>
 </div>
 
-<!-- BOTONES -->
+<!-- BOTONES CORRECTOS -->
 <div class="btn-grid">
-<button id="btnPizza">PIZZAS</button>
-<button id="btnHamburguesas">HAMB</button>
-<button id="btnLomitos">LOMITOS</button>
-<button id="btnCarrito">PEDIDO</button>
+  <button id="btnPizza" class="btn-flotante">PIZZAS</button>
+  <button id="btnHamburguesas" class="btn-flotante">HAMBURGUESAS</button>
+  <button id="btnBebidas" class="btn-flotante">BEBIDAS</button>
+  <button id="btnCarrito" class="btn-flotante">MI PEDIDO</button>
 </div>
 
 <script>
 const pedidoKey = "carritoPedido";
 let seleccionado = {};
 
-// 🔗 BOTONES
-btnPizza.onclick = () => location.href="https://alo-rico.github.io/precios-alorico/";
-btnHamburguesas.onclick = () => location.href="https://alo-rico.github.io/hamburguesas/";
-btnLomitos.onclick = () => location.href="https://alo-rico.github.io/lomitos/";
-btnCarrito.onclick = () => {
+// 🔗 ACCESOS CORRECTOS
+document.getElementById("btnPizza").onclick = () => {
+  window.location.href = "https://1967-rob.github.io/precios-alo-rico/";
+};
+
+document.getElementById("btnHamburguesas").onclick = () => {
+  window.location.href = "https://alo-rico.github.io/precios-alorico-hamb-lomito/";
+};
+
+document.getElementById("btnBebidas").onclick = () => {
+  window.location.href = "https://alo-rico.github.io/bebidas/";
+};
+
+document.getElementById("btnCarrito").onclick = () => {
   document.getElementById("pedido-flotante").classList.toggle("activo");
 };
 
-// 🔥 CARGAR MENU LOMITOS
+// 🔥 CARGAR MENU
 async function cargarMenu() {
   try {
     const res = await fetch("./precios.json");
@@ -153,19 +172,16 @@ async function cargarMenu() {
     menu.innerHTML = "";
 
     Object.entries(data).forEach(([nombre, info]) => {
-
       const card = document.createElement("div");
       card.className = "product";
 
       card.innerHTML = `
-        <img src="imagen/${info.imagen}" 
-             onerror="this.src='https://via.placeholder.com/200x140?text=Sin+imagen'">
+        <img src="imagen/${info.imagen}" onerror="this.src='https://via.placeholder.com/200x140?text=Sin+imagen'">
         <h3>${nombre}</h3>
         <p>Gs. ${info.precio.toLocaleString()}</p>
       `;
 
       card.onclick = () => abrir(nombre, info.precio);
-
       menu.appendChild(card);
     });
 
