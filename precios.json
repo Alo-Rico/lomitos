@@ -11,12 +11,10 @@
     "ingredientes": "Queso fundido con panceta",
     "imagen": "super-pancho-especial.jpg"
   },
-
   "Lomito árabe mixto": {
     "categoria": "lomito",
     "precio": 28000,
     "ingredientes": "",
     "imagen": "lomito-arabe-mixto.jpg"
-  },
-
+  }
 }
