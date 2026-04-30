@@ -1,101 +1,81 @@
-fetch('./precios.json')
-  .then(response => {
-    if (!response.ok) throw new Error("JSON no encontrado");
-    return response.json();
-  })
-  .then(data => {
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
 
-    const menu = document.getElementById('menu-container');
+  const menu = document.getElementById('menu');
+
+  function mostrarError(msg) {
+    menu.innerHTML = `<p style="color:red;">${msg}</p>`;
+  }
+
+  function limpiarNombre(nombre) {
+    return nombre
+      .toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, "-");
+  }
+
+  function crearCard(nombre, info) {
+
+    const card = document.createElement('div');
+    card.className = 'product';
+
+    const img = limpiarNombre(info.imagen || "default.jpg");
+    const ruta = "./imagen/" + img;
+
+    card.innerHTML = `
+      <img src="${ruta}" alt="${nombre}">
+      <h3>${nombre}</h3>
+      <p>Gs. ${(info.precio || 0).toLocaleString()}</p>
+    `;
+
+    // 🔥 FALLBACK SI NO EXISTE LA IMAGEN
+    const imagen = card.querySelector("img");
+    imagen.onerror = () => {
+      imagen.src = "https://via.placeholder.com/200x140?text=Sin+imagen";
+    };
+
+    return card;
+  }
+
+  try {
+
+    const res = await fetch("./precios.json");
+
+    if (!res.ok) {
+      throw new Error("No se encontró precios.json");
+    }
+
+    let data;
+
+    try {
+      data = await res.json();
+    } catch (e) {
+      throw new Error("JSON mal formado (coma de más o error de sintaxis)");
+    }
+
+    if (!data || typeof data !== "object") {
+      throw new Error("JSON vacío o inválido");
+    }
+
+    menu.innerHTML = "";
 
     Object.entries(data).forEach(([nombre, info]) => {
 
-      const card = document.createElement('div');
-      card.className = 'producto';
-
-      // 🔥 limpieza automática del nombre (clave)
-      function limpiar(nombre) {
-        return nombre
-          .toLowerCase()
-          .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-          .replace(/\s+/g, "-")
-          .replace(".jpeg", ".jpg");
+      // 🔥 VALIDACIÓN DE CADA PRODUCTO
+      if (!info.precio) {
+        console.warn("Producto sin precio:", nombre);
+        return;
       }
 
-      const img = limpiar(info.imagen);
-
-      card.innerHTML = `
-        <img src="imagen/${img}" alt="${nombre}">
-        <h3>${nombre}</h3>
-        <p>${info.ingredientes || ""}</p>
-        <p><strong>Gs. ${info.precio.toLocaleString()}</strong></p>
-        <button onclick="abrirPopup('${nombre}', ${info.precio})">Agregar</button>
-      `;
-
+      const card = crearCard(nombre, info);
       menu.appendChild(card);
+
     });
 
-  })
-  .catch(error => {
-    console.error("Error al cargar el menú:", error);
-    document.getElementById('menu-container').innerHTML =
-      "<p style='color:red;'>No se pudo cargar el menú</p>";
-  });
+  } catch (error) {
+    console.error(error);
+    mostrarError("⚠️ Error: " + error.message);
+  }
 
-function abrirPopup(nombre, precio) {
-  document.getElementById('popup-title').innerText = nombre;
-  document.getElementById('popup').style.display = 'block';
-  document.getElementById('overlay').style.display = 'block';
-
-  document.getElementById('confirmar-btn').onclick = () => {
-    const cantidad = parseInt(document.getElementById('cantidad').value);
-    agregarPedido(nombre, precio, cantidad);
-    cerrarPopup();
-  };
-}
-
-function cerrarPopup() {
-  document.getElementById('popup').style.display = 'none';
-  document.getElementById('overlay').style.display = 'none';
-}
-
-let pedido = [];
-
-function agregarPedido(nombre, precio, cantidad) {
-  pedido.push({ nombre, precio, cantidad });
-  renderPedido();
-}
-
-function renderPedido() {
-  const lista = document.getElementById('lista-pedido');
-  lista.innerHTML = '';
-  let total = 0;
-
-  pedido.forEach(item => {
-    const li = document.createElement('li');
-    li.textContent =
-      `${item.cantidad} x ${item.nombre} - Gs. ${(item.precio * item.cantidad).toLocaleString()}`;
-    lista.appendChild(li);
-
-    total += item.precio * item.cantidad;
-  });
-
-  document.getElementById('total-pedido').innerText =
-    'Total: Gs. ' + total.toLocaleString();
-}
-
-function borrarPedido() {
-  pedido = [];
-  renderPedido();
-}
-
-function enviarPedido() {
-  if (pedido.length === 0) return alert("El pedido está vacío.");
-
-  let mensaje = 'Hola, quiero pedir:\n';
-
-  pedido.forEach(item => {
-    mensaje += `${item.cantidad} x ${item.nombre} - Gs. ${(item.precio * item.cantidad).toLocaleString()}\n`;
-  });
-
-  window.open("https://wa.me/?text=" + encodeURIComponent(mensaje), "_blank");
-}
+});
+</script>
