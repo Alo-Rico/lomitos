@@ -233,8 +233,10 @@ Object.entries(data).forEach(([n,i])=>{
   <p>Gs. ${i.precio}</p>
  `;
 
- card.querySelector(".img-click").addEventListener("click", () => abrir(n,i.precio));
-
+card.addEventListener("click", (e) => {
+ e.stopPropagation();
+ abrir(n, i.precio);
+});
  document.getElementById("menu").appendChild(card);
 });
 
