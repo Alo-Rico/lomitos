@@ -51,7 +51,7 @@ button:active{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:10px;
-  z-index:10000; /* 🔥 FIX */
+  z-index:10000;
 }
 
 .btn-flotante {
@@ -71,7 +71,7 @@ button:active{
 /* 🔥 carrito igual pizza */
 #pedido-flotante{
  position:fixed;
- bottom:20px;
+ bottom:80px;
  left:50%;
  transform:translateX(-50%) translateY(120px);
  background:#fff;
@@ -84,16 +84,33 @@ button:active{
  width:90%;
  max-width:320px;
  text-align:center;
-
- pointer-events:none; /* 🔥 FIX */
+ pointer-events:none;
 }
 
 #pedido-flotante.activo{
  transform:translateX(-50%) translateY(0);
  opacity:1;
- pointer-events:auto; /* 🔥 FIX */
+ pointer-events:auto;
 }
 
+.acciones-pedido{
+ display:flex;
+ gap:10px;
+ margin-top:10px;
+}
+
+.acciones-pedido button{
+ flex:1;
+ padding:10px;
+ border:none;
+ border-radius:8px;
+ font-weight:bold;
+}
+
+#btn-borrar{ background:#e53935; color:white; }
+#btn-enviar{ background:#2e7d32; color:white; }
+
+/* popup */
 #popup-cantidad {
   display:none;
   position:fixed;
@@ -105,7 +122,6 @@ button:active{
 }
 .popup-content { background:white; padding:20px; border-radius:10px; }
 </style>
-
 </head>
 
 <body>
@@ -122,8 +138,11 @@ button:active{
 <h3>Mi Pedido</h3>
 <ul id="lista-pedido"></ul>
 <p id="total-pedido"></p>
+
+<div class="acciones-pedido">
 <button id="btn-borrar">Borrar</button>
-<button id="btn-enviar">Enviar</button>
+<button id="btn-enviar">Enviar pedido</button>
+</div>
 </div>
 
 <div id="popup-cantidad">
@@ -151,10 +170,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyADGYsqhbCFuKj2fXpontLpND_rtT7Nlno",
   authDomain: "alorico-59754.firebaseapp.com",
   databaseURL: "https://alorico-59754-default-rtdb.firebaseio.com",
-  projectId: "alorico-59754",
-  storageBucket: "alorico-59754.firebasestorage.app",
-  messagingSenderId: "120993494626",
-  appId: "1:120993494626:web:9f9cb0ad6fbfbd1abd033b"
+  projectId: "alorico-59754"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -162,16 +178,17 @@ const db = getDatabase(app);
 
 let clienteId = localStorage.getItem("clienteId");
 if (!clienteId) {
-  clienteId = "cliente_" + Date.now();
-  localStorage.setItem("clienteId", clienteId);
+ clienteId = "cliente_" + Date.now();
+ localStorage.setItem("clienteId", clienteId);
 }
 
 const pedidoRef = ref(db, "pedidos/" + clienteId);
 
-// LINKS
-document.getElementById("btnPizza").onclick = () => location.href="https://alo-rico.github.io/pizza/";
-document.getElementById("btnHamburguesas").onclick = () => location.href="https://alo-rico.github.io/hamburguesa/";
+// botones
+document.getElementById("btnPizza").onclick = () => location.href="https://alo-rico.github.io/precios-alo-rico/";
+document.getElementById("btnHamburguesas").onclick = () => location.href="https://alo-rico.github.io/precios-alorico-hamb-lomito/";
 document.getElementById("btnBebidas").onclick = () => location.href="https://alo-rico.github.io/bebidas/";
+
 document.getElementById("btnCarrito").onclick = () => {
  const p = document.getElementById("pedido-flotante");
  p.classList.toggle("activo");
@@ -199,7 +216,7 @@ onValue(pedidoRef, snap=>{
   });
  }
 
- totalTxt.innerText="Total: Gs. "+total.toLocaleString();
+ totalTxt.innerText="Total: Gs. "+total;
 });
 
 // MENU
@@ -214,27 +231,34 @@ Object.entries(data).forEach(([n,i])=>{
  document.getElementById("menu").appendChild(card);
 });
 
-// POPUP
+// popup
 let seleccionado={};
 
-window.abrir=(n,p)=>{
+function abrir(n,p){
  seleccionado={nombre:n,precio:p};
  document.getElementById("popup-nombre").innerText=n;
  document.getElementById("popup-cantidad").style.display="flex";
-};
+}
 
-window.cerrar=()=> document.getElementById("popup-cantidad").style.display="none";
+function cerrar(){
+ document.getElementById("popup-cantidad").style.display="none";
+}
 
-window.confirmar=()=>{
+function confirmar(){
  const cant=parseInt(document.getElementById("cantidad").value)||1;
  push(pedidoRef,{...seleccionado,cantidad:cant});
  cerrar();
-};
+}
 
-// BORRAR
+// 🔥 hacer accesible en module
+window.abrir = abrir;
+window.cerrar = cerrar;
+window.confirmar = confirmar;
+
+// borrar
 document.getElementById("btn-borrar").onclick = () => remove(pedidoRef);
 
-// WHATSAPP
+// whatsapp
 document.getElementById("btn-enviar").onclick = () => {
  onValue(pedidoRef,(snap)=>{
   const data=snap.val();
