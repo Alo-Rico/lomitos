@@ -34,6 +34,16 @@ header img.icono { width:60px; }
   object-fit:cover;
 }
 
+/* 🔥 BOTONES 3D (IGUAL QUE PIZZA) */
+button{
+ transition: all 0.15s ease;
+ box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+}
+button:active{
+ transform: translateY(3px);
+ box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+}
+
 .btn-grid {
   position:fixed;
   right:15px;
@@ -41,7 +51,6 @@ header img.icono { width:60px; }
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:10px;
-  z-index:9998;
 }
 
 .btn-flotante {
@@ -49,14 +58,15 @@ header img.icono { width:60px; }
   border:none;
   border-radius:50px;
   font-weight:bold;
-  color:white;
   cursor:pointer;
+  color:#fff;
 }
 
+/* 🎨 COLORES IGUAL QUE PIZZA */
 #btnPizza { background:#ffc107; color:black; }
 #btnHamburguesas { background:#28a745; }
-#btnBebidas { background:#17a2b8; }
-#btnCarrito { background:#007bff; }
+#btnBebidas { background:#007bff; }
+#btnCarrito { background:#ff5722; }
 
 #pedido-flotante {
   position:fixed;
@@ -113,10 +123,10 @@ header img.icono { width:60px; }
 </div>
 
 <div class="btn-grid">
-<button id="btnPizza">PIZZAS</button>
-<button id="btnHamburguesas">HAMBURGUESAS</button>
-<button id="btnBebidas">BEBIDAS</button>
-<button id="btnCarrito">MI PEDIDO</button>
+<button id="btnPizza" class="btn-flotante">PIZZAS</button>
+<button id="btnHamburguesas" class="btn-flotante">HAMBURGUESAS</button>
+<button id="btnBebidas" class="btn-flotante">BEBIDAS</button>
+<button id="btnCarrito" class="btn-flotante">MI PEDIDO</button>
 </div>
 
 <script type="module">
