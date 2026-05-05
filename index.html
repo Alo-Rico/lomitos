@@ -68,7 +68,7 @@ button:active{
 #btnBebidas { background:#007bff; }
 #btnCarrito { background:#ff5722; }
 
-/* 🚫 NO TOCAR (tu estructura original) */
+/* 🚫 estructura original intacta */
 #pedido-flotante {
   position:fixed;
   top:50%;
@@ -155,11 +155,13 @@ if (!clienteId) {
 
 const pedidoRef = ref(db, "pedidos/" + clienteId);
 
-// LINKS (igual que tenías)
-btnPizza.onclick = () => location.href="https://alo-rico.github.io/pizza/";
-btnHamburguesas.onclick = () => location.href="https://alo-rico.github.io/hamburguesa/";
-btnBebidas.onclick = () => location.href="https://alo-rico.github.io/bebidas/";
-btnCarrito.onclick = () => document.getElementById("pedido-flotante").classList.toggle("activo");
+// LINKS
+document.getElementById("btnPizza").onclick = () => location.href="https://alo-rico.github.io/pizza/";
+document.getElementById("btnHamburguesas").onclick = () => location.href="https://alo-rico.github.io/hamburguesa/";
+document.getElementById("btnBebidas").onclick = () => location.href="https://alo-rico.github.io/bebidas/";
+document.getElementById("btnCarrito").onclick = () => {
+  document.getElementById("pedido-flotante").classList.toggle("activo");
+};
 
 // LISTEN PEDIDO
 onValue(pedidoRef, snap=>{
@@ -217,35 +219,23 @@ window.confirmar=()=>{
 document.getElementById("btn-borrar").onclick=()=> remove(pedidoRef);
 
 // WHATSAPP
-document.getElementById("enviar-whatsapp").onclick=()=>{
- onValue(pedidoRef,(snap)=>{
-  const data=snap.val();
-  if(!data)return alert("Sin pedido");
+document.getElementById("btn-enviar").onclick=()=>{
+  onValue(pedidoRef,snap=>{
+    const d=snap.val();
+    if(!d) return alert("Vacío");
 
-  let txt="";
-  let total=0;
+    let msg="Pedido:\n";
+    let total=0;
 
-  Object.values(data).forEach(p=>{
-   txt+=`- ${p.nombre} x${p.cantidad}\n`;
-   total+=p.precio*p.cantidad;
-  });
+    Object.values(d).forEach(p=>{
+      msg+=`${p.cantidad} x ${p.nombre}\n`;
+      total+=p.precio*p.cantidad;
+    });
 
-  const msg=`Hola:envio mi pedido %0A${txt}%0ATotal: Gs. ${total}`;
-  window.open(`https://wa.me/+595971891251?text=${msg}`);
- },{onlyOnce:true});
+    msg+=`\nTotal: Gs. ${total.toLocaleString()}`;
+    window.open("https://wa.me/?text="+encodeURIComponent(msg));
+  },{onlyOnce:true});
 };
-
-// MENU
-const res=await fetch("precios.json");
-const productos=await res.json();
-
-Object.entries(productos).forEach(([n,i])=>{
- const div=document.createElement("div");
- div.className="product";
- div.innerHTML=`<img src="${i.imagen}?v=${Date.now()}"><h3>${n}</h3><p>Gs. ${i.precio}</p>`;
- div.onclick=()=>abrirPopup(n,i.precio);
- document.getElementById("menu").appendChild(div);
-});
 </script>
 
 </body>
