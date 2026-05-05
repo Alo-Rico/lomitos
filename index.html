@@ -227,15 +227,8 @@ const data = await res.json();
 Object.entries(data).forEach(([n,i])=>{
  const card=document.createElement("div");
  card.className="product";
-
- card.innerHTML = `
-  <img src="imagen/${i.imagen}" class="img-click">
-  <h3>${n}</h3>
-  <p>Gs. ${i.precio}</p>
- `;
-
- card.querySelector(".img-click").addEventListener("click", () => abrir(n, i.precio));
-
+ card.innerHTML=`<img src="imagen/${i.imagen}"><h3>${n}</h3><p>Gs. ${i.precio}</p>`;
+ card.onclick = () => abrir(n,i.precio);
  document.getElementById("menu").appendChild(card);
 });
 
