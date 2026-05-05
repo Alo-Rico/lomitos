@@ -34,7 +34,7 @@ header img.icono { width:60px; }
   object-fit:cover;
 }
 
-/* 🔥 SOLO ESTO SE AGREGA (EFECTO PIZZA) */
+/* 🔥 BOTONES IGUAL QUE PIZZA */
 button{
  transition: all 0.15s ease;
  box-shadow: 0 4px 0 rgba(0,0,0,0.2);
@@ -59,16 +59,16 @@ button:active{
   border:none;
   border-radius:50px;
   font-weight:bold;
-  color:white;
   cursor:pointer;
+  color:#fff;
 }
 
-/* 🎨 COLORES IGUAL QUE PIZZA */
 #btnPizza { background:#ffc107; color:black; }
 #btnHamburguesas { background:#28a745; }
 #btnBebidas { background:#007bff; }
 #btnCarrito { background:#ff5722; }
 
+/* 🚫 NO TOCAR (tu estructura original) */
 #pedido-flotante {
   position:fixed;
   top:50%;
@@ -131,7 +131,121 @@ button:active{
 </div>
 
 <script type="module">
-/* 🔒 TODO TU JS ORIGINAL SIN TOCAR */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyADGYsqhbCFuKj2fXpontLpND_rtT7Nlno",
+  authDomain: "alorico-59754.firebaseapp.com",
+  databaseURL: "https://alorico-59754-default-rtdb.firebaseio.com",
+  projectId: "alorico-59754",
+  storageBucket: "alorico-59754.firebasestorage.app",
+  messagingSenderId: "120993494626",
+  appId: "1:120993494626:web:9f9cb0ad6fbfbd1abd033b"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+let clienteId = localStorage.getItem("clienteId");
+if (!clienteId) {
+  clienteId = "cliente_" + Date.now();
+  localStorage.setItem("clienteId", clienteId);
+}
+
+const pedidoRef = ref(db, "pedidos/" + clienteId);
+
+// LINKS (igual que tenías)
+btnPizza.onclick = () => location.href="https://alo-rico.github.io/pizza/";
+btnHamburguesas.onclick = () => location.href="https://alo-rico.github.io/hamburguesa/";
+btnBebidas.onclick = () => location.href="https://alo-rico.github.io/bebidas/";
+btnCarrito.onclick = () => document.getElementById("pedido-flotante").classList.toggle("activo");
+
+// LISTEN PEDIDO
+onValue(pedidoRef, snap=>{
+  const data = snap.val();
+  const lista = document.getElementById("lista-pedido");
+  const totalTxt = document.getElementById("total-pedido");
+
+  lista.innerHTML="";
+  let total=0;
+
+  if(data){
+    Object.values(data).forEach(p=>{
+      const li=document.createElement("li");
+      li.innerText=`${p.cantidad} x ${p.nombre}`;
+      lista.appendChild(li);
+      total+=p.precio*p.cantidad;
+    });
+  }
+
+  totalTxt.innerText="Total: Gs. "+total.toLocaleString();
+});
+
+// MENU
+const res = await fetch("./precios.json");
+const data = await res.json();
+
+const menu = document.getElementById("menu");
+
+Object.entries(data).forEach(([n,i])=>{
+  const card=document.createElement("div");
+  card.className="product";
+  card.innerHTML=`<img src="imagen/${i.imagen}"><h3>${n}</h3><p>Gs. ${i.precio}</p>`;
+  card.onclick=()=>abrir(n,i.precio);
+  menu.appendChild(card);
+});
+
+// POPUP
+let seleccionado={};
+
+window.abrir=(n,p)=>{
+  seleccionado={nombre:n,precio:p};
+  document.getElementById("popup-nombre").innerText=n;
+  document.getElementById("popup-cantidad").style.display="flex";
+};
+
+window.cerrar=()=> document.getElementById("popup-cantidad").style.display="none";
+
+window.confirmar=()=>{
+  const cant=parseInt(document.getElementById("cantidad").value)||1;
+  push(pedidoRef,{...seleccionado,cantidad:cant});
+  cerrar();
+};
+
+// BORRAR
+document.getElementById("btn-borrar").onclick=()=> remove(pedidoRef);
+
+// WHATSAPP
+document.getElementById("enviar-whatsapp").onclick=()=>{
+ onValue(pedidoRef,(snap)=>{
+  const data=snap.val();
+  if(!data)return alert("Sin pedido");
+
+  let txt="";
+  let total=0;
+
+  Object.values(data).forEach(p=>{
+   txt+=`- ${p.nombre} x${p.cantidad}\n`;
+   total+=p.precio*p.cantidad;
+  });
+
+  const msg=`Hola:envio mi pedido %0A${txt}%0ATotal: Gs. ${total}`;
+  window.open(`https://wa.me/+595971891251?text=${msg}`);
+ },{onlyOnce:true});
+};
+
+// MENU
+const res=await fetch("precios.json");
+const productos=await res.json();
+
+Object.entries(productos).forEach(([n,i])=>{
+ const div=document.createElement("div");
+ div.className="product";
+ div.innerHTML=`<img src="${i.imagen}?v=${Date.now()}"><h3>${n}</h3><p>Gs. ${i.precio}</p>`;
+ div.onclick=()=>abrirPopup(n,i.precio);
+ document.getElementById("menu").appendChild(div);
+});
 </script>
 
 </body>
