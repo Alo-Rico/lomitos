@@ -164,11 +164,10 @@ if (!clienteId) {
 const pedidoRef = ref(db, "pedidos/" + clienteId);
 
 // LINKS
-btnPizza.onclick = () => location.href="https://alo-rico.github.io/pizza/";
-btnHamburguesas.onclick = () => location.href="https://alo-rico.github.io/hamburguesa/";
-btnBebidas.onclick = () => location.href="https://alo-rico.github.io/bebidas/";
-
-btnCarrito.onclick = () => {
+document.getElementById("btnPizza").onclick = () => location.href="https://alo-rico.github.io/pizza/";
+document.getElementById("btnHamburguesas").onclick = () => location.href="https://alo-rico.github.io/hamburguesa/";
+document.getElementById("btnBebidas").onclick = () => location.href="https://alo-rico.github.io/bebidas/";
+document.getElementById("btnCarrito").onclick = () => {
  const p = document.getElementById("pedido-flotante");
  p.classList.toggle("activo");
 
@@ -228,10 +227,10 @@ window.confirmar=()=>{
 };
 
 // BORRAR
-btn-borrar.onclick=()=> remove(pedidoRef);
+document.getElementById("btn-borrar").onclick = () => remove(pedidoRef);
 
 // WHATSAPP
-document.getElementById("enviar-whatsapp").onclick=()=>{
+document.getElementById("btn-enviar").onclick = () => {
  onValue(pedidoRef,(snap)=>{
   const data=snap.val();
   if(!data)return alert("Sin pedido");
