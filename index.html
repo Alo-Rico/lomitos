@@ -422,9 +422,321 @@ MI PEDIDO
 
 </div>
 
-<!-- PEGA AQUÍ TODO TU SCRIPT ORIGINAL -->
-<!-- DESDE: <script type="module"> -->
-<!-- HASTA: </script> -->
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+
+import {
+ getDatabase,
+ ref,
+ push,
+ onValue,
+ remove
+} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+
+/* MESA */
+
+const params =
+new URLSearchParams(window.location.search);
+
+const mesa =
+params.get("mesa") || "general";
+
+/* FIREBASE */
+
+const firebaseConfig = {
+
+ apiKey: "AIzaSyADGYsqhbCFuKj2fXpontLpND_rtT7Nlno",
+
+ authDomain: "alorico-59754.firebaseapp.com",
+
+ databaseURL: "https://alorico-59754-default-rtdb.firebaseio.com",
+
+ projectId: "alorico-59754"
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getDatabase(app);
+
+/* CLIENTE */
+
+const clienteId =
+"mesa_" + mesa;
+
+const pedidoRef =
+ref(db,"pedidos/" + clienteId);
+
+/* TITULO */
+
+document.getElementById("titulo-pedido")
+.innerText =
+`Mi Pedido - Mesa ${mesa}`;
+
+/* BOTONES */
+
+document.getElementById("btnPizza").onclick = ()=>{
+
+ location.href =
+ `https://alo-rico.github.io/pizza/?mesa=${mesa}`;
+};
+
+document.getElementById("btnHamburguesas").onclick = ()=>{
+
+ location.href =
+ `https://alo-rico.github.io/hamburguesa/?mesa=${mesa}`;
+};
+
+document.getElementById("btnBebidas").onclick = ()=>{
+
+ location.href =
+ `https://alo-rico.github.io/bebidas/?mesa=${mesa}`;
+};
+
+document.getElementById("btnCarrito").onclick = ()=>{
+
+ const p =
+ document.getElementById("pedido-flotante");
+
+ p.classList.toggle("activo");
+
+ if(p.classList.contains("activo")){
+
+  setTimeout(()=>{
+
+   p.classList.remove("activo");
+
+  },7000);
+ }
+};
+
+/* TOTAL */
+
+function actualizarMensajeTotal(total){
+
+ const mensajeTotal =
+ document.getElementById("mensaje-total");
+
+ if(total > 0){
+
+  mensajeTotal.innerHTML =
+  `💰 Mesa ${mesa} - Total: Gs. ${total.toLocaleString()}`;
+
+  mensajeTotal.style.display = "block";
+
+ }else{
+
+  mensajeTotal.style.display = "none";
+ }
+}
+
+/* LISTEN PEDIDO */
+
+onValue(pedidoRef, snap=>{
+
+ const data = snap.val();
+
+ const lista =
+ document.getElementById("lista-pedido");
+
+ const totalTxt =
+ document.getElementById("total-pedido");
+
+ lista.innerHTML="";
+
+ let total=0;
+
+ if(data){
+
+  Object.entries(data).forEach(([key,p])=>{
+
+   const li=document.createElement("li");
+
+   li.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;width:100%;">
+
+      <span>${p.cantidad} x ${p.nombre}</span>
+
+      <span
+       onclick="eliminarItem('${key}')"
+       style="
+        background:#ef4444;
+        color:white;
+        width:22px;
+        height:22px;
+        border-radius:50%;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        cursor:pointer;
+        font-size:12px;
+        font-weight:bold;
+       "
+      >
+      🗑
+      </span>
+
+    </div>
+   `;
+
+   lista.appendChild(li);
+
+   total += p.precio * p.cantidad;
+  });
+ }
+
+ totalTxt.innerText =
+ "Total: Gs. " + total.toLocaleString();
+
+ actualizarMensajeTotal(total);
+});
+
+/* MENU FIREBASE */
+
+const menuRef =
+ref(db,"productos");
+
+onValue(menuRef,(snap)=>{
+
+ const data = snap.val();
+
+ const menu =
+ document.getElementById("menu");
+
+ menu.innerHTML = "";
+
+ if(data){
+
+  Object.values(data).forEach((i)=>{
+
+   if(i.categoria !== "lomitos") return;
+
+   const card =
+   document.createElement("div");
+
+   card.className = "product";
+
+   card.innerHTML = `
+    <img src="${i.imagen}">
+    <h3>${i.nombre}</h3>
+    <p>Gs. ${Number(i.precio).toLocaleString()}</p>
+   `;
+
+   card.addEventListener("click",(e)=>{
+
+    e.stopPropagation();
+
+    abrir(
+      i.nombre,
+      Number(i.precio)
+    );
+   });
+
+   menu.appendChild(card);
+
+  });
+ }
+});
+
+/* POPUP */
+
+let seleccionado={};
+
+window.abrir = function(n,p){
+
+ seleccionado={
+  nombre:n,
+  precio:p
+ };
+
+ document.getElementById("popup-nombre")
+ .innerText=n;
+
+ document.getElementById("cantidad")
+ .value = 1;
+
+ document.getElementById("popup-cantidad")
+ .style.display="flex";
+}
+
+window.cerrar = function(){
+
+ document.getElementById("popup-cantidad")
+ .style.display="none";
+}
+
+window.confirmar = function(){
+
+ const cant =
+ parseInt(
+  document.getElementById("cantidad").value
+ ) || 1;
+
+ push(pedidoRef,{
+  ...seleccionado,
+  cantidad:cant
+ });
+
+ cerrar();
+}
+
+/* ELIMINAR */
+
+window.eliminarItem = function(key){
+
+ remove(
+  ref(db,
+   "pedidos/" + clienteId + "/" + key
+  )
+ );
+}
+
+/* BORRAR */
+
+document.getElementById("btn-borrar")
+.onclick = ()=>{
+
+ remove(pedidoRef);
+};
+
+/* WHATSAPP */
+
+document.getElementById("btn-enviar")
+.onclick = ()=>{
+
+ onValue(pedidoRef,(snap)=>{
+
+  const data=snap.val();
+
+  if(!data){
+
+   alert("Sin pedido");
+
+   return;
+  }
+
+  let txt="";
+
+  let total=0;
+
+  Object.values(data).forEach(p=>{
+
+   txt += `- ${p.nombre} x${p.cantidad}%0A`;
+
+   total += p.precio * p.cantidad;
+  });
+
+  const msg =
+  `Hola envio mi pedido - Mesa ${mesa}:%0A${txt}%0ATotal: Gs. ${total.toLocaleString()}`;
+
+  window.open(
+   `https://wa.me/+595971891251?text=${msg}`
+  );
+
+ },{onlyOnce:true});
+};
+
+</script>
 
 </body>
 </html>
