@@ -96,6 +96,26 @@ button:active{
   background:#ff5722;
 }
 
+/* TOTAL FLOTANTE */
+
+#mensaje-total{
+ display:none;
+ background:#28a745;
+ color:#fff;
+ padding:8px 14px;
+ margin-bottom:5px;
+ border-radius:10px;
+ font-weight:bold;
+ box-shadow:0 4px 8px rgba(0,0,0,0.3);
+ text-align:center;
+ position:fixed;
+ bottom:120px;
+ left:50%;
+ transform:translateX(-50%);
+ z-index:9999;
+ min-width:220px;
+}
+
 /* carrito */
 #pedido-flotante{
  position:fixed;
@@ -218,6 +238,10 @@ button:active{
 </div>
 </div>
 
+<div id="mensaje-total">
+💰 Total: Gs. 0
+</div>
+
 <div class="btn-grid">
 <button id="btnPizza" class="btn-flotante">PIZZAS</button>
 <button id="btnHamburguesas" class="btn-flotante">HAMBURGUESAS</button>
@@ -280,6 +304,26 @@ document.getElementById("btnCarrito").onclick = () => {
  }
 };
 
+/* TOTAL FLOTANTE */
+
+function actualizarMensajeTotal(total){
+
+ const mensajeTotal =
+ document.getElementById("mensaje-total");
+
+ if(total > 0){
+
+  mensajeTotal.innerHTML =
+  `💰 Total: Gs. ${total.toLocaleString()}`;
+
+  mensajeTotal.style.display = "block";
+
+ }else{
+
+  mensajeTotal.style.display = "none";
+ }
+}
+
 /* LISTEN PEDIDO */
 
 onValue(pedidoRef, snap=>{
@@ -332,6 +376,8 @@ onValue(pedidoRef, snap=>{
  }
 
  totalTxt.innerText = "Total: Gs. " + total.toLocaleString();
+
+ actualizarMensajeTotal(total);
 });
 
 /* MENU */
