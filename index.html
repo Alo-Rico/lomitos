@@ -6,61 +6,80 @@
 <title>Menú Alo Rico - Lomitos</title>
 
 <style>
-body {
-  font-family: Arial, sans-serif;
+
+body{
+  font-family:Arial,sans-serif;
   background:#fefaf0;
   margin:0;
   text-align:center;
 }
 
-header img.logo {
+header img.logo{
   width:120px;
   margin-top:20px;
 }
 
-header h1 {
+header h1{
   color:#c24a00;
 }
 
-header img.icono {
+header img.icono{
   width:60px;
 }
 
-.menu-container {
+.menu-container{
   display:flex;
   flex-wrap:wrap;
   justify-content:center;
   padding:20px;
-  padding-bottom:120px;
+  padding-bottom:140px;
 }
 
-.product {
+.product{
   width:180px;
   background:white;
   margin:15px;
-  border-radius:10px;
-  box-shadow:0 4px 8px rgba(0,0,0,0.1);
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 4px 10px rgba(0,0,0,0.12);
   cursor:pointer;
+  transition:0.2s;
 }
 
-.product img {
+.product:hover{
+  transform:scale(1.03);
+}
+
+.product img{
   width:100%;
   height:140px;
   object-fit:cover;
 }
 
+.product h3{
+  margin:12px 5px 6px;
+  font-size:17px;
+}
+
+.product p{
+  margin-bottom:14px;
+  color:#444;
+  font-weight:bold;
+}
+
 /* BOTONES */
+
 button{
- transition: all 0.15s ease;
- box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+ transition:all .15s ease;
+ box-shadow:0 4px 0 rgba(0,0,0,.2);
 }
 
 button:active{
- transform: translateY(3px);
- box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+ transform:translateY(3px);
+ box-shadow:0 1px 0 rgba(0,0,0,.2);
 }
 
-.btn-grid {
+.btn-grid{
   position:fixed;
   right:15px;
   bottom:15px;
@@ -70,67 +89,68 @@ button:active{
   z-index:10000;
 }
 
-.btn-flotante {
-  padding:12px;
+.btn-flotante{
+  width:150px;
+  height:52px;
   border:none;
-  border-radius:50px;
+  border-radius:14px;
   font-weight:bold;
   cursor:pointer;
-  color:#fff;
+  color:white;
+  font-size:15px;
 }
 
-#btnPizza {
-  background:#ffc107;
-  color:black;
+#btnPizza{
+  background:#ff9800;
 }
 
-#btnHamburguesas {
+#btnHamburguesas{
   background:#28a745;
 }
 
-#btnBebidas {
-  background:#007bff;
+#btnBebidas{
+  background:#2196f3;
 }
 
-#btnCarrito {
+#btnCarrito{
   background:#ff5722;
 }
 
-/* TOTAL FLOTANTE */
+/* TOTAL */
 
 #mensaje-total{
  display:none;
  background:#28a745;
  color:#fff;
- padding:8px 14px;
- margin-bottom:5px;
- border-radius:10px;
+ padding:10px 16px;
+ border-radius:12px;
  font-weight:bold;
- box-shadow:0 4px 8px rgba(0,0,0,0.3);
+ box-shadow:0 4px 10px rgba(0,0,0,0.25);
  text-align:center;
  position:fixed;
- bottom:120px;
+ bottom:135px;
  left:50%;
  transform:translateX(-50%);
  z-index:9999;
- min-width:220px;
+ min-width:240px;
 }
 
-/* carrito */
+/* PEDIDO */
+
 #pedido-flotante{
  position:fixed;
- bottom:180px;
+ bottom:185px;
  left:50%;
  transform:translateX(-50%) translateY(120px);
  background:#fff;
  padding:18px;
- border-radius:15px;
- box-shadow:0 12px 35px rgba(0,0,0,0.25);
+ border-radius:18px;
+ box-shadow:0 12px 35px rgba(0,0,0,.25);
  opacity:0;
- transition:all 0.35s ease;
+ transition:all .35s ease;
  z-index:9999;
  width:90%;
- max-width:320px;
+ max-width:340px;
  text-align:center;
  pointer-events:none;
 }
@@ -150,35 +170,36 @@ button:active{
 #pedido-flotante li{
  margin-bottom:10px;
  border-bottom:1px solid #ddd;
- padding-bottom:5px;
+ padding-bottom:6px;
 }
 
 .acciones-pedido{
  display:flex;
  gap:10px;
- margin-top:10px;
+ margin-top:12px;
 }
 
 .acciones-pedido button{
  flex:1;
- padding:10px;
+ padding:11px;
  border:none;
- border-radius:8px;
+ border-radius:10px;
  font-weight:bold;
+ color:white;
+ cursor:pointer;
 }
 
 #btn-borrar{
  background:#e53935;
- color:white;
 }
 
 #btn-enviar{
  background:#2e7d32;
- color:white;
 }
 
-/* popup */
-#popup-cantidad {
+/* POPUP */
+
+#popup-cantidad{
   display:none;
   position:fixed;
   top:0;
@@ -191,62 +212,131 @@ button:active{
   z-index:99999;
 }
 
-.popup-content {
+.popup-content{
   background:white;
-  padding:20px;
-  border-radius:10px;
+  padding:24px;
+  border-radius:16px;
   width:300px;
   text-align:center;
-  box-shadow:0 10px 30px rgba(0,0,0,0.3);
+  box-shadow:0 10px 30px rgba(0,0,0,.3);
 }
+
+.popup-content input{
+ width:80px;
+ font-size:20px;
+ text-align:center;
+ padding:8px;
+ margin-top:10px;
+}
+
+.popup-content button{
+ padding:10px 18px;
+ margin:10px 5px 0;
+ border:none;
+ border-radius:8px;
+ font-weight:bold;
+ cursor:pointer;
+}
+
 </style>
 </head>
 
 <body>
 
 <header>
+
 <img src="logo.png" class="logo">
+
 <h1>Menú de Lomitos</h1>
+
 <img src="Repartidor.png" class="icono">
+
 </header>
 
 <div id="menu" class="menu-container"></div>
 
+<!-- PEDIDO -->
+
 <div id="pedido-flotante">
-<h3>Mi Pedido</h3>
+
+<h3 id="titulo-pedido">
+Mi Pedido
+</h3>
 
 <ul id="lista-pedido"></ul>
 
 <p id="total-pedido"></p>
 
 <div class="acciones-pedido">
-<button id="btn-borrar">Borrar</button>
-<button id="btn-enviar">Enviar pedido</button>
+
+<button id="btn-borrar">
+Borrar
+</button>
+
+<button id="btn-enviar">
+Enviar pedido
+</button>
+
 </div>
+
 </div>
+
+<!-- POPUP -->
 
 <div id="popup-cantidad">
+
 <div class="popup-content">
+
 <h3 id="popup-nombre"></h3>
 
-<input id="cantidad" type="number" value="1">
+<input id="cantidad" type="number" value="1" min="1">
 
 <br><br>
 
-<button onclick="confirmar()">OK</button>
-<button onclick="cerrar()">Cancelar</button>
+<button
+ onclick="confirmar()"
+ style="background:#28a745;color:white;"
+>
+OK
+</button>
+
+<button
+ onclick="cerrar()"
+ style="background:#f44336;color:white;"
+>
+Cancelar
+</button>
+
 </div>
+
 </div>
+
+<!-- TOTAL -->
 
 <div id="mensaje-total">
 💰 Total: Gs. 0
 </div>
 
+<!-- BOTONES -->
+
 <div class="btn-grid">
-<button id="btnPizza" class="btn-flotante">PIZZAS</button>
-<button id="btnHamburguesas" class="btn-flotante">HAMBURGUESAS</button>
-<button id="btnBebidas" class="btn-flotante">BEBIDAS</button>
-<button id="btnCarrito" class="btn-flotante">MI PEDIDO</button>
+
+<button id="btnPizza" class="btn-flotante">
+PIZZAS
+</button>
+
+<button id="btnHamburguesas" class="btn-flotante">
+HAMBURGUESAS
+</button>
+
+<button id="btnBebidas" class="btn-flotante">
+BEBIDAS
+</button>
+
+<button id="btnCarrito" class="btn-flotante">
+MI PEDIDO
+</button>
+
 </div>
 
 <script type="module">
@@ -261,50 +351,83 @@ import {
  remove
 } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
 
+/* MESA */
+
+const params =
+new URLSearchParams(window.location.search);
+
+const mesa =
+params.get("mesa") || "general";
+
+/* FIREBASE */
+
 const firebaseConfig = {
-  apiKey: "AIzaSyADGYsqhbCFuKj2fXpontLpND_rtT7Nlno",
-  authDomain: "alorico-59754.firebaseapp.com",
-  databaseURL: "https://alorico-59754-default-rtdb.firebaseio.com",
-  projectId: "alorico-59754"
+
+ apiKey: "AIzaSyADGYsqhbCFuKj2fXpontLpND_rtT7Nlno",
+
+ authDomain: "alorico-59754.firebaseapp.com",
+
+ databaseURL: "https://alorico-59754-default-rtdb.firebaseio.com",
+
+ projectId: "alorico-59754"
 };
 
 const app = initializeApp(firebaseConfig);
+
 const db = getDatabase(app);
 
-let clienteId = localStorage.getItem("clienteId");
+/* CLIENTE */
 
-if (!clienteId) {
- clienteId = "cliente_" + Date.now();
- localStorage.setItem("clienteId", clienteId);
-}
+const clienteId =
+"mesa_" + mesa;
 
-const pedidoRef = ref(db, "pedidos/" + clienteId);
+const pedidoRef =
+ref(db,"pedidos/" + clienteId);
+
+/* TITULO */
+
+document.getElementById("titulo-pedido")
+.innerText =
+`Mi Pedido - Mesa ${mesa}`;
 
 /* BOTONES */
 
-document.getElementById("btnPizza").onclick = () =>
- location.href="https://alo-rico.github.io/pizza/";
+document.getElementById("btnPizza").onclick = ()=>{
 
-document.getElementById("btnHamburguesas").onclick = () =>
- location.href="https://alo-rico.github.io/hamburguesa/";
+ location.href =
+ `https://alo-rico.github.io/pizza/?mesa=${mesa}`;
+};
 
-document.getElementById("btnBebidas").onclick = () =>
- location.href="https://alo-rico.github.io/bebidas/";
+document.getElementById("btnHamburguesas").onclick = ()=>{
 
-document.getElementById("btnCarrito").onclick = () => {
+ location.href =
+ `https://alo-rico.github.io/hamburguesa/?mesa=${mesa}`;
+};
 
- const p = document.getElementById("pedido-flotante");
+document.getElementById("btnBebidas").onclick = ()=>{
+
+ location.href =
+ `https://alo-rico.github.io/bebidas/?mesa=${mesa}`;
+};
+
+document.getElementById("btnCarrito").onclick = ()=>{
+
+ const p =
+ document.getElementById("pedido-flotante");
 
  p.classList.toggle("activo");
 
  if(p.classList.contains("activo")){
+
   setTimeout(()=>{
+
    p.classList.remove("activo");
+
   },7000);
  }
 };
 
-/* TOTAL FLOTANTE */
+/* TOTAL */
 
 function actualizarMensajeTotal(total){
 
@@ -314,7 +437,7 @@ function actualizarMensajeTotal(total){
  if(total > 0){
 
   mensajeTotal.innerHTML =
-  `💰 Total: Gs. ${total.toLocaleString()}`;
+  `💰 Mesa ${mesa} - Total: Gs. ${total.toLocaleString()}`;
 
   mensajeTotal.style.display = "block";
 
@@ -330,9 +453,11 @@ onValue(pedidoRef, snap=>{
 
  const data = snap.val();
 
- const lista = document.getElementById("lista-pedido");
+ const lista =
+ document.getElementById("lista-pedido");
 
- const totalTxt = document.getElementById("total-pedido");
+ const totalTxt =
+ document.getElementById("total-pedido");
 
  lista.innerHTML="";
 
@@ -346,6 +471,7 @@ onValue(pedidoRef, snap=>{
 
    li.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;width:100%;">
+
       <span>${p.cantidad} x ${p.nombre}</span>
 
       <span
@@ -366,6 +492,7 @@ onValue(pedidoRef, snap=>{
       >
       🗑
       </span>
+
     </div>
    `;
 
@@ -375,38 +502,42 @@ onValue(pedidoRef, snap=>{
   });
  }
 
- totalTxt.innerText = "Total: Gs. " + total.toLocaleString();
+ totalTxt.innerText =
+ "Total: Gs. " + total.toLocaleString();
 
  actualizarMensajeTotal(total);
 });
 
 /* MENU */
 
-const res = await fetch("./precios.json");
+const res =
+await fetch("./precios.json");
 
-const data = await res.json();
+const data =
+await res.json();
 
 Object.entries(data).forEach(([n,i])=>{
 
- const card=document.createElement("div");
+ const card =
+ document.createElement("div");
 
  card.className="product";
 
  card.innerHTML = `
-  <img src="imagen/${i.imagen}" class="img-click">
+  <img src="imagen/${i.imagen}">
   <h3>${n}</h3>
   <p>Gs. ${i.precio}</p>
  `;
 
- card.addEventListener("click", (e) => {
+ card.addEventListener("click",(e)=>{
 
   e.stopPropagation();
 
-  window.abrir(n, i.precio);
-
+  abrir(n,i.precio);
  });
 
- document.getElementById("menu").appendChild(card);
+ document.getElementById("menu")
+ .appendChild(card);
 });
 
 /* POPUP */
@@ -420,64 +551,85 @@ window.abrir = function(n,p){
   precio:p
  };
 
- document.getElementById("popup-nombre").innerText=n;
+ document.getElementById("popup-nombre")
+ .innerText=n;
 
- document.getElementById("popup-cantidad").style.display="flex";
+ document.getElementById("cantidad")
+ .value = 1;
+
+ document.getElementById("popup-cantidad")
+ .style.display="flex";
 }
 
 window.cerrar = function(){
 
- document.getElementById("popup-cantidad").style.display="none";
+ document.getElementById("popup-cantidad")
+ .style.display="none";
 }
 
 window.confirmar = function(){
 
  const cant =
- parseInt(document.getElementById("cantidad").value) || 1;
+ parseInt(
+  document.getElementById("cantidad").value
+ ) || 1;
 
  push(pedidoRef,{
   ...seleccionado,
   cantidad:cant
  });
 
- window.cerrar();
+ cerrar();
 }
 
-/* ELIMINAR ITEM */
+/* ELIMINAR */
 
 window.eliminarItem = function(key){
 
- remove(ref(db, "pedidos/" + clienteId + "/" + key));
-
+ remove(
+  ref(db,
+   "pedidos/" + clienteId + "/" + key
+  )
+ );
 }
 
-/* BORRAR TODO */
+/* BORRAR */
 
-document.getElementById("btn-borrar").onclick = () =>
+document.getElementById("btn-borrar")
+.onclick = ()=>{
+
  remove(pedidoRef);
+};
 
 /* WHATSAPP */
 
-document.getElementById("btn-enviar").onclick = () => {
+document.getElementById("btn-enviar")
+.onclick = ()=>{
 
  onValue(pedidoRef,(snap)=>{
 
   const data=snap.val();
 
-  if(!data) return alert("Sin pedido");
+  if(!data){
+
+   alert("Sin pedido");
+
+   return;
+  }
 
   let txt="";
+
   let total=0;
 
   Object.values(data).forEach(p=>{
 
-   txt += `- ${p.nombre} x${p.cantidad}\n`;
+   txt += `- ${p.nombre} x${p.cantidad}%0A`;
 
    total += p.precio * p.cantidad;
   });
 
   const msg =
-   `Hola envio mi pedido:%0A${txt}%0ATotal: Gs. ${total}`;
+  `Hola envio mi pedido - Mesa ${mesa}:%0A${txt}%0ATotal: Gs. ${total.toLocaleString()}`;
 
   window.open(
    `https://wa.me/+595971891251?text=${msg}`
