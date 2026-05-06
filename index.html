@@ -508,36 +508,51 @@ onValue(pedidoRef, snap=>{
  actualizarMensajeTotal(total);
 });
 
-/* MENU */
+/* MENU FIREBASE */
 
-const res =
-await fetch("./precios.json");
+const menuRef =
+ref(db,"productos");
 
-const data =
-await res.json();
+onValue(menuRef,(snap)=>{
 
-Object.entries(data).forEach(([n,i])=>{
+ const data = snap.val();
 
- const card =
- document.createElement("div");
+ const menu =
+ document.getElementById("menu");
 
- card.className="product";
+ menu.innerHTML = "";
 
- card.innerHTML = `
-  <img src="imagen/${i.imagen}">
-  <h3>${n}</h3>
-  <p>Gs. ${i.precio}</p>
- `;
+ if(data){
 
- card.addEventListener("click",(e)=>{
+  Object.values(data).forEach((i)=>{
 
-  e.stopPropagation();
+   if(i.categoria !== "lomitos") return;
 
-  abrir(n,i.precio);
- });
+   const card =
+   document.createElement("div");
 
- document.getElementById("menu")
- .appendChild(card);
+   card.className = "product";
+
+   card.innerHTML = `
+    <img src="${i.imagen}">
+    <h3>${i.nombre}</h3>
+    <p>Gs. ${Number(i.precio).toLocaleString()}</p>
+   `;
+
+   card.addEventListener("click",(e)=>{
+
+    e.stopPropagation();
+
+    abrir(
+      i.nombre,
+      Number(i.precio)
+    );
+   });
+
+   menu.appendChild(card);
+
+  });
+ }
 });
 
 /* POPUP */
