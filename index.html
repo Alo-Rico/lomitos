@@ -6,11 +6,25 @@
 <title>Menú Alo Rico - Lomitos</title>
 
 <style>
-body { font-family: Arial, sans-serif; background:#fefaf0; margin:0; text-align:center; }
+body {
+  font-family: Arial, sans-serif;
+  background:#fefaf0;
+  margin:0;
+  text-align:center;
+}
 
-header img.logo { width:120px; margin-top:20px; }
-header h1 { color:#c24a00; }
-header img.icono { width:60px; }
+header img.logo {
+  width:120px;
+  margin-top:20px;
+}
+
+header h1 {
+  color:#c24a00;
+}
+
+header img.icono {
+  width:60px;
+}
 
 .menu-container {
   display:flex;
@@ -28,17 +42,19 @@ header img.icono { width:60px; }
   box-shadow:0 4px 8px rgba(0,0,0,0.1);
   cursor:pointer;
 }
+
 .product img {
   width:100%;
   height:140px;
   object-fit:cover;
 }
 
-/* BOTONES estilo pizza */
+/* BOTONES */
 button{
  transition: all 0.15s ease;
  box-shadow: 0 4px 0 rgba(0,0,0,0.2);
 }
+
 button:active{
  transform: translateY(3px);
  box-shadow: 0 1px 0 rgba(0,0,0,0.2);
@@ -63,10 +79,22 @@ button:active{
   color:#fff;
 }
 
-#btnPizza { background:#ffc107; color:black; }
-#btnHamburguesas { background:#28a745; }
-#btnBebidas { background:#007bff; }
-#btnCarrito { background:#ff5722; }
+#btnPizza {
+  background:#ffc107;
+  color:black;
+}
+
+#btnHamburguesas {
+  background:#28a745;
+}
+
+#btnBebidas {
+  background:#007bff;
+}
+
+#btnCarrito {
+  background:#ff5722;
+}
 
 /* carrito */
 #pedido-flotante{
@@ -93,6 +121,18 @@ button:active{
  pointer-events:auto;
 }
 
+#pedido-flotante ul{
+ list-style:none;
+ padding:0;
+ margin:0;
+}
+
+#pedido-flotante li{
+ margin-bottom:10px;
+ border-bottom:1px solid #ddd;
+ padding-bottom:5px;
+}
+
 .acciones-pedido{
  display:flex;
  gap:10px;
@@ -107,8 +147,15 @@ button:active{
  font-weight:bold;
 }
 
-#btn-borrar{ background:#e53935; color:white; }
-#btn-enviar{ background:#2e7d32; color:white; }
+#btn-borrar{
+ background:#e53935;
+ color:white;
+}
+
+#btn-enviar{
+ background:#2e7d32;
+ color:white;
+}
 
 /* popup */
 #popup-cantidad {
@@ -120,7 +167,12 @@ button:active{
   justify-content:center;
   align-items:center;
 }
-.popup-content { background:white; padding:20px; border-radius:10px; }
+
+.popup-content {
+  background:white;
+  padding:20px;
+  border-radius:10px;
+}
 </style>
 </head>
 
@@ -136,7 +188,9 @@ button:active{
 
 <div id="pedido-flotante">
 <h3>Mi Pedido</h3>
+
 <ul id="lista-pedido"></ul>
+
 <p id="total-pedido"></p>
 
 <div class="acciones-pedido">
@@ -148,8 +202,11 @@ button:active{
 <div id="popup-cantidad">
 <div class="popup-content">
 <h3 id="popup-nombre"></h3>
+
 <input id="cantidad" type="number" value="1">
+
 <br><br>
+
 <button onclick="confirmar()">OK</button>
 <button onclick="cerrar()">Cancelar</button>
 </div>
@@ -163,8 +220,16 @@ button:active{
 </div>
 
 <script type="module">
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+
+import {
+ getDatabase,
+ ref,
+ push,
+ onValue,
+ remove
+} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyADGYsqhbCFuKj2fXpontLpND_rtT7Nlno",
@@ -177,6 +242,7 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 let clienteId = localStorage.getItem("clienteId");
+
 if (!clienteId) {
  clienteId = "cliente_" + Date.now();
  localStorage.setItem("clienteId", clienteId);
@@ -184,47 +250,81 @@ if (!clienteId) {
 
 const pedidoRef = ref(db, "pedidos/" + clienteId);
 
-// botones
-document.getElementById("btnPizza").onclick = () => location.href="https://alo-rico.github.io/pizza/";
-document.getElementById("btnHamburguesas").onclick = () => location.href="https://alo-rico.github.io/hamburguesa/";
-document.getElementById("btnBebidas").onclick = () => location.href="https://alo-rico.github.io/bebidas/";
+/* BOTONES */
+
+document.getElementById("btnPizza").onclick = () =>
+ location.href="https://alo-rico.github.io/pizza/";
+
+document.getElementById("btnHamburguesas").onclick = () =>
+ location.href="https://alo-rico.github.io/hamburguesa/";
+
+document.getElementById("btnBebidas").onclick = () =>
+ location.href="https://alo-rico.github.io/bebidas/";
 
 document.getElementById("btnCarrito").onclick = () => {
+
  const p = document.getElementById("pedido-flotante");
+
  p.classList.toggle("activo");
 
  if(p.classList.contains("activo")){
-  setTimeout(()=>{ p.classList.remove("activo"); },7000);
+  setTimeout(()=>{
+   p.classList.remove("activo");
+  },7000);
  }
 };
 
-// LISTEN
+/* LISTEN PEDIDO */
+
 onValue(pedidoRef, snap=>{
+
  const data = snap.val();
+
  const lista = document.getElementById("lista-pedido");
+
  const totalTxt = document.getElementById("total-pedido");
 
  lista.innerHTML="";
+
  let total=0;
 
  if(data){
-  Object.values(data).forEach(p=>{
+
+  Object.entries(data).forEach(([key,p])=>{
+
    const li=document.createElement("li");
-   li.innerText=`${p.cantidad} x ${p.nombre}`;
+
+   li.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;width:100%;">
+      <span>${p.cantidad} x ${p.nombre}</span>
+
+      <img
+        src="basurero.png"
+        style="width:18px;cursor:pointer;"
+        onclick="eliminarItem('${key}')"
+      >
+    </div>
+   `;
+
    lista.appendChild(li);
-   total+=p.precio*p.cantidad;
+
+   total += p.precio * p.cantidad;
   });
  }
 
- totalTxt.innerText="Total: Gs. "+total;
+ totalTxt.innerText = "Total: Gs. " + total.toLocaleString();
 });
 
-// MENU
+/* MENU */
+
 const res = await fetch("./precios.json");
+
 const data = await res.json();
 
 Object.entries(data).forEach(([n,i])=>{
+
  const card=document.createElement("div");
+
  card.className="product";
 
  card.innerHTML = `
@@ -233,29 +333,48 @@ Object.entries(data).forEach(([n,i])=>{
   <p>Gs. ${i.precio}</p>
  `;
 
-card.addEventListener("click", (e) => {
- e.stopPropagation();
- abrir(n, i.precio);
-});
+ card.addEventListener("click", (e) => {
+
+  e.stopPropagation();
+
+  abrir(n, i.precio);
+
+ });
+
  document.getElementById("menu").appendChild(card);
 });
 
-// popup
+/* POPUP */
+
 let seleccionado={};
 
 function abrir(n,p){
- seleccionado={nombre:n,precio:p};
+
+ seleccionado={
+  nombre:n,
+  precio:p
+ };
+
  document.getElementById("popup-nombre").innerText=n;
+
  document.getElementById("popup-cantidad").style.display="flex";
 }
 
 function cerrar(){
+
  document.getElementById("popup-cantidad").style.display="none";
 }
 
 function confirmar(){
- const cant=parseInt(document.getElementById("cantidad").value)||1;
- push(pedidoRef,{...seleccionado,cantidad:cant});
+
+ const cant =
+ parseInt(document.getElementById("cantidad").value) || 1;
+
+ push(pedidoRef,{
+  ...seleccionado,
+  cantidad:cant
+ });
+
  cerrar();
 }
 
@@ -263,27 +382,49 @@ window.abrir = abrir;
 window.cerrar = cerrar;
 window.confirmar = confirmar;
 
-// borrar
-document.getElementById("btn-borrar").onclick = () => remove(pedidoRef);
+/* ELIMINAR ITEM */
 
-// whatsapp
+window.eliminarItem = function(key){
+
+ remove(ref(db, "pedidos/" + clienteId + "/" + key));
+
+}
+
+/* BORRAR TODO */
+
+document.getElementById("btn-borrar").onclick = () =>
+ remove(pedidoRef);
+
+/* WHATSAPP */
+
 document.getElementById("btn-enviar").onclick = () => {
+
  onValue(pedidoRef,(snap)=>{
+
   const data=snap.val();
-  if(!data)return alert("Sin pedido");
+
+  if(!data) return alert("Sin pedido");
 
   let txt="";
   let total=0;
 
   Object.values(data).forEach(p=>{
-   txt+=`- ${p.nombre} x${p.cantidad}\n`;
-   total+=p.precio*p.cantidad;
+
+   txt += `- ${p.nombre} x${p.cantidad}\n`;
+
+   total += p.precio * p.cantidad;
   });
 
-  const msg=`Hola envio mi pedido:%0A${txt}%0ATotal: Gs. ${total}`;
-  window.open(`https://wa.me/+595971891251?text=${msg}`);
+  const msg =
+   `Hola envio mi pedido:%0A${txt}%0ATotal: Gs. ${total}`;
+
+  window.open(
+   `https://wa.me/+595971891251?text=${msg}`
+  );
+
  },{onlyOnce:true});
 };
+
 </script>
 
 </body>
