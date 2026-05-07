@@ -745,7 +745,7 @@ document.getElementById("btn-enviar")
 
   Object.values(data).forEach(p=>{
 
-   txt += `- ${p.nombre} x${p.cantidad}%0A`;
+ txt += `- ${p.nombre} x${p.cantidad} - Gs. ${(p.precio * p.cantidad).toLocaleString()}%0A`;
 
    total += p.precio * p.cantidad;
   });
