@@ -573,7 +573,13 @@ onValue(pedidoRef, snap=>{
    li.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;width:100%;">
 
-      <span>${p.cantidad} x ${p.nombre}</span>
+ <span>
+  ${p.cantidad} x ${p.nombre}
+  <br>
+  <strong>
+    Gs. ${(p.precio * p.cantidad).toLocaleString()}
+  </strong>
+</span>
 
       <span
        onclick="eliminarItem('${key}')"
