@@ -753,10 +753,14 @@ document.getElementById("btn-enviar")
   const msg =
   `Hola envio mi pedido - Mesa ${mesa}:%0A${txt}%0ATotal: Gs. ${total.toLocaleString()}`;
 
-  window.open(
-   `https://wa.me/+595971891251?text=${msg}`
-  );
+window.open(
+ `https://wa.me/+595971891251?text=${mensaje}`
+);
 
+remove(pedidoRef);
+
+document.getElementById("pedido-flotante")
+.classList.remove("activo");
  },{onlyOnce:true});
 };
 
