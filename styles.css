@@ -188,22 +188,39 @@ header img.icono{
  background:#8b5cf6;
 }
 
-/* TOTAL */
+/* TOTAL VERDE */
 
 #mensaje-total{
- display:none;
- background:#22c55e;
- color:#fff;
- padding:14px 18px;
- border-radius:16px;
- font-weight:700;
- box-shadow:0 10px 30px rgba(0,0,0,.35);
+
  position:fixed;
- bottom:145px;
+
  left:50%;
+ bottom:140px;
+
  transform:translateX(-50%);
- z-index:99999;
+
+ background:#22c55e;
+
+ color:white;
+
+ padding:14px 22px;
+
+ border-radius:18px;
+
+ font-weight:700;
+
+ font-size:16px;
+
  min-width:260px;
+
+ text-align:center;
+
+ box-shadow:
+ 0 10px 30px rgba(0,0,0,.35);
+
+ z-index:100000;
+
+ display:none;
 }
 
 /* PEDIDO */
