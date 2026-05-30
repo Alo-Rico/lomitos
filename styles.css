@@ -134,7 +134,7 @@ header img.icono{
  color:#22c55e;
 }
 
-/* BOTONES FLOTANTES */
+/* BOTONES */
 
 .btn-grid{
  position:fixed;
@@ -202,35 +202,41 @@ header img.icono{
  bottom:145px;
  left:50%;
  transform:translateX(-50%);
- z-index:9999;
+ z-index:99999;
  min-width:260px;
 }
 
 /* PEDIDO */
 
 #pedido-flotante{
+
  position:fixed;
+
  bottom:210px;
+
  left:50%;
- transform:translateX(-50%) translateY(120px);
+
+ transform:translateX(-50%);
+
  background:#111827;
+
  border:1px solid rgba(255,255,255,.08);
+
  padding:22px;
+
  border-radius:24px;
- box-shadow:0 20px 45px rgba(0,0,0,.45);
- opacity:0;
- transition:all .35s ease;
- z-index:9999;
+
+ box-shadow:
+ 0 20px 45px rgba(0,0,0,.45);
+
+ z-index:99999;
+
  width:92%;
  max-width:390px;
- text-align:center;
- pointer-events:none;
-}
 
-#pedido-flotante.activo{
- transform:translateX(-50%) translateY(0);
- opacity:1;
- pointer-events:auto;
+ text-align:center;
+
+ display:none;
 }
 
 #pedido-flotante ul{
